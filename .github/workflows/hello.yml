@@ -22,7 +22,5 @@ jobs:
         run: java -version
 
       - name: Build application
-        run: |
-          chmod +x mvnw
-          ./mvnw clean package
+        run: ./mvn clean package
 
