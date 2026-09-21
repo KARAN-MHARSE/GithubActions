@@ -1,12 +1,16 @@
-name: Hello Github Actions
+name: Java CI
 
 on:
   push:
 
 jobs:
-  hello:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Say Hello
-        run: exit 1
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Show files
+        run: ls -la
+
