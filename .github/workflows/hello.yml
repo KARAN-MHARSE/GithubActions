@@ -16,10 +16,13 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+          cache: 'maven'
 
       - name: Show java version
         run: java -version
 
       - name: Build application
-        run: ./mvnw clean package
+        run: |
+          chmod +x mvnw
+          ./mvnw clean package
 
