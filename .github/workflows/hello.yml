@@ -52,7 +52,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push Docker image
-        run: docker push ghcr.io/karan-mharse/my-app:${{ github.sha }}
+        run: docker push ghcr.io/karan-mharse/my-app:latest
 
       - name: Deploy to Render
         run: |
@@ -61,5 +61,5 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
             -H "Content-Type: application/json" \
             -d '{
-              "imageUrl": "ghcr.io/karan-mharse/my-app:${{ github.sha }}"
+              "imageUrl": "ghcr.io/karan-mharse/my-app:latest"
             }'
