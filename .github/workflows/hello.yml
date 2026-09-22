@@ -22,13 +22,14 @@ jobs:
         run: java -version
 
       - name: Give execute permission to Maven wrapper
-        run: chmod +x mvn
+        run: chmod +x mvnw
 
       - name: Build application
-        run: ./mvn clean package
+        run: ./mvnw clean package
 
-      - name: Upload Jar
+      - name: Upload JAR
         uses: actions/upload-artifact@v4
         with:
           name: my-app-jar
           path: target/*.jar
+          if-no-files-found: error
