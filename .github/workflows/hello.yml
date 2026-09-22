@@ -2,6 +2,8 @@ name: Java CI
 
 on:
   push:
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -12,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout Code
         uses: actions/checkout@v4
 
@@ -22,7 +25,7 @@ jobs:
           java-version: '17'
           cache: 'maven'
 
-      - name: Show java version
+      - name: Show Java version
         run: java -version
 
       - name: Give execute permission to Maven wrapper
@@ -38,15 +41,25 @@ jobs:
           path: target/*.jar
           if-no-files-found: error
 
-      - name : Build Docker image
-        run: docker build -t ghcr.io/karan-mharse/${{github.sha}} .
+      - name: Build Docker image
+        run: docker build -t ghcr.io/karan-mharse/my-app:${{ github.sha }} .
 
-      - name: login to GHCR
+      - name: Login to GHCR
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name : push the docker image
-        run: docker push ghcr.io/karan-mharse/${{github.sha}}
+      - name: Push Docker image
+        run: docker push ghcr.io/karan-mharse/my-app:${{ github.sha }}
+
+      - name: Deploy to Render
+        run: |
+          curl -X POST \
+            "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys" \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "imageUrl": "ghcr.io/karan-mharse/my-app:${{ github.sha }}"
+            }'
