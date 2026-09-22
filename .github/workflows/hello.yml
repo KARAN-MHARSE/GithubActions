@@ -3,6 +3,10 @@ name: Java CI
 on:
   push:
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -35,4 +39,14 @@ jobs:
           if-no-files-found: error
 
       - name : Build Docker image
-        run: docker build -t action-java-app:latest .
+        run: docker build -t ghcr.io/KARAN-MHARSE/actions:0.0.1 .
+
+      - name: login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name : push the docker image
+        run: docker push ghcr.io/KARAN-MHARSE/actions:0.0.1
